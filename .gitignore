@@ -331,3 +331,7 @@ ASALocalRun/
 /LiveStreem.WebApi.Authentication/.config/dotnet-tools.json
 /LiveStreem.WebApi/.config/dotnet-tools.json
 /local/.env
+
+// SQLite databases
+**/*.db
+**/*.db-*
