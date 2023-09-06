@@ -37,7 +37,7 @@ public class AuthController : ControllerBase
             };
 
             // Create a symmetric security key
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
 
             // Create a signing credential using the key
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -75,7 +75,7 @@ public class AuthController : ControllerBase
         }
 
         return Ok(new {
-            isAuthenticated = User.Identity.IsAuthenticated,
+            isAuthenticated = User.Identity!.IsAuthenticated,
             name = User.Identity.Name,
             claims = claimValues,
             claimsDict = vals
