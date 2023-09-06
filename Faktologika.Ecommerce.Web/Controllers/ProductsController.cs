@@ -131,9 +131,9 @@ namespace Faktologika.Ecommerce.Web
         }
 
         [HttpPost("deactivate/{productId}")]
-        public async Task<IActionResult> DeactivateProduct(int productId)
+        public IActionResult DeactivateProduct(int productId)
         {
-            throw new NotImplementedException();
+            return Ok();
         }
 
         private bool ProductExists(int id)
