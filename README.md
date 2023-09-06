@@ -23,6 +23,10 @@ _NOTE_: Env variables are not in the `app.Configuration` in `Program.cs` for som
 
 Env variables with `FEW_` (Faktologika.Ecommerce.Web) prefix are included in configuration.
 
+# Add a migration
+
+```dotnet ef migrations add InitiateCatalog -c CatalogDbContext -o Migrations/Catalog```
+
 # Default seeded admin 
 
 User: `admin@faktologika.bg`

@@ -1,12 +1,13 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Faktologika.Ecommerce.Web.Data;
-using Microsoft.Extensions.DependencyInjection;
 using Faktologika.Ecommerce.Web;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Microsoft.OpenApi.Models;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -57,8 +58,28 @@ builder.Services
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddAutoMapper(cfg => {
+    cfg.CreateMap<ProductCreateModel, Product>();
+    cfg.CreateMap<ProductEditModel, Product>();
+});
 
-builder.Services.AddControllersWithViews();
+// builder.Services.AddControllersWithViews();
+builder.Services.AddControllers()
+    .AddNewtonsoftJson(options =>
+        {
+            options.SerializerSettings.ContractResolver = new DefaultContractResolver
+            {
+                // NamingStrategy = new SnakeCaseNamingStrategy() // Optional naming strategy
+                // NamingStrategy = new CamelCaseNamingStrategy()
+                // NamingStrategy = new PascalCaseNamingStrategy() // default
+            };
+
+            // custom resolver so empty JSON payload could be partial
+            // options.SerializerSettings.ContractResolver = new OptionalPropertiesContractResolver();
+        });
+//     .AddJsonOptions(o => {
+//     o.JsonSerializerOptions.Converters.Add(new JsonConverter<JObject>());
+// });
 
 var app = builder.Build();
 

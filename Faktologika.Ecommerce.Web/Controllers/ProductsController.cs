@@ -1,39 +1,48 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+// using System.Web.Http;
 
 namespace Faktologika.Ecommerce.Web
 {
     [Route("api/[controller]")]
     [ApiController]
     public class ProductsController : ControllerBase
+    // public class ProductsController : ApiController
     {
         private readonly CatalogDbContext _context;
+        private readonly IMapper _mapper;
 
-        public ProductsController(CatalogDbContext context)
+        public ProductsController(CatalogDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/Products
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProduct()
+        public async Task<ActionResult<IEnumerable<ProductDto>>> GetProduct()
         {
             if (_context.Product == null)
             {
                 return NotFound();
             }
-            return await _context.Product.ToListAsync();
+            var result = await _context.Product.Select(x => new ProductDto(x)).ToListAsync();
+            return result;
         }
 
         // GET: api/Products/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Product>> GetProduct(int id)
+        public async Task<ActionResult<ProductDto>> GetProduct(int id)
         {
             if (_context.Product == null)
             {
@@ -46,18 +55,21 @@ namespace Faktologika.Ecommerce.Web
                 return NotFound();
             }
 
-            return product;
+            return new ProductDto(product);
         }
 
         // PUT: api/Products/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutProduct(int id, Product product)
+        public async Task<IActionResult> PutProduct(int id, ProductEditModel model)
         {
-            if (id != product.Id)
-            {
-                return BadRequest();
-            }
+            // if (id != productDto.Id)
+            // {
+            //     return BadRequest();
+            // }
+            var product = new Product();
+            _mapper.Map(model, product);
+            product.Id = id;
 
             _context.Entry(product).State = EntityState.Modified;
 
@@ -84,21 +96,17 @@ namespace Faktologika.Ecommerce.Web
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult<Product>> PostProduct(ProductCreateDto productCreateRequest)
+        public async Task<ActionResult<ProductDto>> PostProduct(ProductCreateModel model)
         {
+            // var strBody = req.Content.ReadAsStringAsync().Result;
+            // var dto = JsonConvert.DeserializeObject<ProductDto>(strBody);
             if (_context.Product == null)
             {
                 return Problem("Entity set 'CatalogDbContext.Product'  is null.");
             }
 
-            //   var product = new Product();
-            //   product.Name = productCreateRequest.Name;
-            //   product.Price = productCreateRequest.Price;
-            var product = new Product()
-            {
-                Name = productCreateRequest.Name!,
-                Price = productCreateRequest.Price
-            };
+            var product = new Product();
+            _mapper.Map(model, product);
 
             if (product.Price > 1000 || product.Price <= 0)
             {
@@ -107,7 +115,7 @@ namespace Faktologika.Ecommerce.Web
             _context.Product.Add(product);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetProduct", new { id = product.Id }, product);
+            return CreatedAtAction("GetProduct", new { id = product.Id }, new ProductDto(product));
         }
 
         // DELETE: api/Products/5
@@ -128,12 +136,6 @@ namespace Faktologika.Ecommerce.Web
             await _context.SaveChangesAsync();
 
             return NoContent();
-        }
-
-        [HttpPost("deactivate/{productId}")]
-        public IActionResult DeactivateProduct(int productId)
-        {
-            return Ok();
         }
 
         private bool ProductExists(int id)

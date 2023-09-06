@@ -14,6 +14,6 @@ namespace Faktologika.Ecommerce.Web
         }
 
         public DbSet<Product> Product { get; set; } = default!;
-        public DbSet<ProductCategory> ProductCategory { get; set; } = default!;
+        // public DbSet<ProductCategory> ProductCategory { get; set; } = default!;
     }
 }

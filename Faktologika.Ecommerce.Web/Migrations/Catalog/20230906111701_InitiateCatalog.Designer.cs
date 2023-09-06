@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Faktologika.Ecommerce.Web.Migrations
+namespace Faktologika.Ecommerce.Web.Migrations.Catalog
 {
     [DbContext(typeof(CatalogDbContext))]
-    [Migration("20230903143148_Initial")]
-    partial class Initial
+    [Migration("20230906111701_InitiateCatalog")]
+    partial class InitiateCatalog
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,10 @@ namespace Faktologika.Ecommerce.Web.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("CustomJson")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()

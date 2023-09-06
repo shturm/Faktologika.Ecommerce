@@ -2,10 +2,10 @@
 
 #nullable disable
 
-namespace Faktologika.Ecommerce.Web.Migrations
+namespace Faktologika.Ecommerce.Web.Migrations.Catalog
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class InitiateCatalog : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,7 +17,8 @@ namespace Faktologika.Ecommerce.Web.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
-                    Price = table.Column<double>(type: "REAL", nullable: false)
+                    Price = table.Column<double>(type: "REAL", nullable: false),
+                    CustomJson = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
