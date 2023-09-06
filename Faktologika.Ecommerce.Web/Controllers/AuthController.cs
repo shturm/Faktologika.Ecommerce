@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using NuGet.Protocol;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Cors;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -54,7 +55,8 @@ public class AuthController : ControllerBase
             // Return the token as a response
             return Ok(new
             {
-                token = new JwtSecurityTokenHandler().WriteToken(token)
+                access_token = new JwtSecurityTokenHandler().WriteToken(token),
+                refresh_token = "not implemented in backend"
             });
         }
 
