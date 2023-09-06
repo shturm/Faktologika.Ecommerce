@@ -36,7 +36,7 @@ namespace Faktologika.Ecommerce.Web
             {
                 return NotFound();
             }
-            var result = await _context.Product.Select(x => new ProductDto(x)).ToListAsync();
+            var result = await _context.Product.Select(x => _mapper.Map<Product,ProductDto>(x)).ToListAsync();
             return result;
         }
 
@@ -55,7 +55,7 @@ namespace Faktologika.Ecommerce.Web
                 return NotFound();
             }
 
-            return new ProductDto(product);
+            return _mapper.Map<Product, ProductDto>(product);
         }
 
         // PUT: api/Products/5
@@ -115,7 +115,7 @@ namespace Faktologika.Ecommerce.Web
             _context.Product.Add(product);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetProduct", new { id = product.Id }, new ProductDto(product));
+            return CreatedAtAction("GetProduct", new { id = product.Id }, _mapper.Map<Product, ProductDto>(product));
         }
 
         // DELETE: api/Products/5
