@@ -10,6 +10,7 @@ using Microsoft.OpenApi.Models;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Configuration.AddEnvironmentVariables(prefix: "FE_");
 
 var usersConnectionString = builder.Configuration.GetConnectionString("UsersConnection")
     ?? throw new InvalidOperationException("Connection string 'UsersConnection' not found.");
